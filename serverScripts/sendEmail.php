@@ -66,7 +66,7 @@ function verifyCaptcha()
     $jsonData = json_decode($json, true);
     $captcha = $jsonData["g-recaptcha-response"];
 
-    $secret='6LcXWxETAAAAADATEVV-H0jDvQ5uVbo6J24Z5PTE';
+    $secret='your_secret';
 
     $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secret."&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
     $responseData = json_decode($response);

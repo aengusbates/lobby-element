@@ -1,3 +1,5 @@
+[See demo here](http://aengusbates.github.com/lobby-element/)
+
 ##&lt;lobby-element&gt;
 `lobby-element` is a Polymer Web component containing a simple contact form allowing users to email their representatives. The form allows users to search for their representatives by constituency and to edit and send them an email.
 

@@ -1,0 +1,30 @@
+{
+  "name": "overlay-element",
+  "version": "1.0.0",
+  "authors": [
+    "Anonymous <aengusbates@gmail.com>"
+  ],
+  "description": "A simple implimentation of iron-overlay-behavior with close button",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "overlay"
+  ],
+  "main": "overlay-element.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/aengusbates/overlay-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0",
+    "paper-styles": "PolymerElements/paper-styles#~1.0.12",
+    "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#~1.1.1",
+    "iron-icons": "PolymerElements/iron-icons#~1.0.5"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
+  }
+}

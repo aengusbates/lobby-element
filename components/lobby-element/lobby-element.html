@@ -1,0 +1,444 @@
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../gold-email-input/gold-email-input.html">
+<link rel="import" href="../paper-input/paper-textarea.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../iron-icons/social-icons.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
+
+<link rel="import" href="../social-element/social-element.html">
+<link rel="import" href="../overlay-element/overlay-element.html">
+
+<dom-module id="lobby-element">
+<template>
+  <style>
+    :host {
+      --paper-item-min-height: 0px;
+      --paper-card-header-text:{ @apply(--paper-font-common-base); };
+      --paper-button:{ @apply(--paper-font-common-base); };
+    }
+    body {
+      @apply(--paper-font-body1);
+    }
+    paper-button.send {
+      background: var(--paper-blue-900);
+      color: white;
+    }
+    paper-spinner {
+      width: 64px;
+      height: 64px;
+    }
+    .body2 {
+      @apply(--paper-font-body1);
+    }
+    .headline {
+      @apply(--paper-font-headline);
+      font-size: 20px !important;
+    }
+    .subhead {
+      @apply(--paper-font-subhead);
+    }
+    .title {
+      @apply(--paper-font-title);
+    }
+    .layout-vertical-center {
+      @apply(--layout-vertical);
+      @apply(--layout-center);
+    }
+    .layout-horizontal-center {
+      @apply(--layout-horizontal);
+      @apply(--layout-wrap);
+      @apply(--layout-center-justified);
+      @apply(--layout-start);
+    }
+    .layout-horizontal-end {
+      @apply(--layout-horizontal);
+      @apply(--layout-wrap);
+      @apply(--layout-end-justified);
+      @apply(--layout-start);
+    }
+    .input-label {
+      @apply(--paper-font-body1);
+      color: var(--secondary-text-color);
+      font-size: calc(16px * .75) !important;
+
+    }
+    .input-error {
+      @apply(--paper-font-body1);
+      color: var(--google-red-500);
+      font-size: calc(16px * .75) !important;
+      border-top: 2px solid var(--google-red-500);
+    }
+    .input-error.dropdown-error {
+      margin-top:-8px;
+    }
+    .custom-input{
+      --paper-input-container-underline: {
+       visibility:hidden; 
+     }
+     --paper-input-container-underline-disabled: {
+       visibility:hidden; 
+     }
+   }
+  .infoRetentionCheckbox{
+    @apply(--paper-font-common-base);
+    --paper-checkbox-label-color: var(--secondary-text-color);
+    --paper-checkbox-unchecked-color: var(--secondary-text-color);
+    margin: 24px 0;
+  }
+  .success .feedbackIcon{
+      color: var( --google-blue-500);
+  }
+  .fail{
+      color: var( --google-red-500);
+  }
+  .feedbackIcon{
+    --iron-icon-height: 64px; 
+    --iron-icon-width: 64px;
+  }
+
+  .petition-form{
+    box-sizing: border-box; 
+    width:33%; 
+  }  
+  .petition-form .top{
+    background-color:var(--paper-grey-100);
+    padding:10px; 
+  }
+  .petition-content{
+    box-sizing: border-box; 
+    width:66%; 
+    padding:10px;
+  }
+
+  @media screen and (max-width: 850px) {
+    .petition-form{
+      box-sizing: border-box; 
+      width:100%; 
+      padding:10px; 
+      min-width:300px; 
+    }
+    .petition-content{
+      box-sizing: border-box; 
+      width:100%;
+      min-width:300px; 
+      padding:10px;
+    }
+  }
+</style>
+
+<iron-ajax auto
+url="./config/reps.json"
+handle-as="json"
+on-response="handleGetRepsResponse"></iron-ajax>
+
+<iron-ajax auto
+url="./config/campaignBlurb.txt"
+handle-as="text"
+last-response="{{campaignBlurb}}"></iron-ajax>
+
+<iron-ajax auto
+id="emailMessageAjax"
+url="./config/emailMessage.txt"
+handle-as="text"
+on-response="handleGetEmailMsgResponse"></iron-ajax>
+
+<iron-ajax auto
+id="emailSubjectAjax"
+url="./config/emailSubject.txt"
+handle-as="text"
+on-response="handleGetEmailSubResponse"></iron-ajax>
+
+<iron-ajax
+id="sendEmailAjax"
+url="[[emailUrl]]"
+method="POST"
+content-type="application/json"
+on-response="handleSendEmailResponse"
+></iron-ajax>
+
+<paper-card style="width:100%;" heading="Lobby Your Representative">
+  <form>
+    <div class="card-content">
+      <div class="layout-horizontal-center">
+        <div class="petition-content">
+          <div class="headline"><span>{{campaignBlurb}}</span></div>
+          <paper-textarea class="custom-input" label="Subject" id="subject" required error-message = "Please enter a subject for the email or click reset for restore the original" value="{{emailSubject}}"></paper-textarea>
+          <paper-textarea class="custom-input" label="Message" id="message" required error-message = "Please enter a message for the email or click reset for restore the original" value="{{emailMessage}}"></paper-textarea>
+          <paper-textarea disabled class="custom-input" id="signature" value="{{signature}}"></paper-textarea>
+        </div>
+        <div class="petition-form">
+          <div class="top">
+            <paper-input label="First Name" id="firstname" required error-message = "Please enter your first name" on-change="onInputChange" value="{{firstname}}"></paper-input>
+            <paper-input label="Last Name" id="lastname" required error-message = "Please enter your last name" on-change="onInputChange" value="{{lastname}}"></paper-input>
+            <gold-email-input id="email" required label="Your Email" error-message = "Please enter a valid email address" on-change="onInputChange" value="{{email}}"></gold-email-input>
+            <div style="margin-bottom:8px;">
+              <paper-dropdown-menu label="Constituency" id="constituency" required error-message = "Please select a constituency" style="width:100%;" on-iron-select="onConstituencySelected">
+                <paper-listbox class="dropdown-content">
+                  <template is="dom-repeat" items="{{constituencies}}">
+                    <paper-item value="{{item}}"><span>{{item}}</span></paper-item>
+                  </template>
+                </paper-listbox>
+              </paper-dropdown-menu>
+              <template is="dom-if" if="{{showConstituencySelectError}}">
+                <div class="input-error dropdown-error">Please select a constituency</div>
+              </template>
+            </div>
+            <template is="dom-if" if="{{selectedReps}}">
+              <div style="margin-bottom:8px;">
+                <div class="input-label">Representatives</div>
+                <template is="dom-repeat" items="{{selectedReps}}">
+                  <paper-item style="padding:0 16px;">
+                    <paper-checkbox class="reps" value="{{item.email}}"><span>{{item.name}}</span> &lt;<span>{{item.email}}</span>&gt;</paper-checkbox>
+                  </paper-item>
+                </template>
+              </div>
+            </template>
+            <template is="dom-if" if="{{showRepSelectError}}">
+              <div class="input-error">Please select a representatives</div>
+            </template>
+            <paper-checkbox id="infoRetentionCheckbox" class="infoRetentionCheckbox">Would you like us to retain your contact details to update you on this and other campaigns?</paper-checkbox>
+            <template is="dom-if" if="{{showRecaptcha}}">
+              <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+              <div class="layout-horizontal-center">
+                <div class="g-recaptcha" data-sitekey="your_key"></div>
+              </div>
+              <template is="dom-if" if="{{showCaptchaError}}">
+                <div class="input-error">Please tick this box</div>
+              </template>
+            </template>
+            <div class="layout-horizontal-end" style="margin-top: 24px; margin-bottom: 8px;">
+              <paper-button on-click="resetForm">Reset</paper-button>
+              <paper-button class="send" on-click="submitForm">Send</paper-button>
+            </div>
+
+            <overlay-element id="feedback-overlay" with-backdrop>
+            <template is="dom-if" if="{{emailSending}}">
+              <div class="layout-vertical-center success">
+                <paper-spinner alt="Loading contacts list" active></paper-spinner>
+              </div>
+            </template>
+            <template is="dom-if" if="{{emailSucceeded}}">
+                <div class="layout-vertical-center success">
+                  <iron-icon icon="social:mood" class="feedbackIcon"></iron-icon>
+                  <p>Your email has sent. Thankyou.</p>
+                </div>
+            </template>
+            <template is="dom-if" if="{{emailFailed}}">
+                <div class="layout-vertical-center fail">
+                  <iron-icon icon="social:mood-bad" class="feedbackIcon"></iron-icon>
+                  <p>Sorry, something went wrong. Please try again later.</p>
+                </div>
+            </template>
+            </overlay-element>
+
+          </div>
+          <div class="layout-horizontal-end">
+            <social-element enable-platforms="[[enablePlatforms]]" twitter-user="[[twitterUser]]"></social-element>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</paper-card>
+</template>
+
+<script>
+  Polymer({
+    is: 'lobby-element',
+    properties: {'email-url': String,
+    'twitter-user': String,
+    'enable-platforms': String},
+    ready: function() {
+        // defer trying rendering Recaptcha until dom ready 
+        this.showRecaptcha = true;
+
+        console.log("this.twitterUser: "+this.twitterUser);
+      },
+      attached: function() {
+        console.log("this.twitterUser: "+this.twitterUser);
+      },
+      submitForm: function () {
+        
+        var captcha = this.getCaptcha();
+
+        if(this.validateForm() && captcha){
+
+          var subject = this.emailSubject + " [Sent by: " + this.firstname + " " + this.lastname + "]";
+          var message = this.emailMessage + "\n\n" + this.signature;
+
+          var firstname = "";
+          var lastname = "";
+          if(this.$.infoRetentionCheckbox.checked){
+            firstname = this.firstname;
+            lastname = this.lastname;
+          }
+
+          this.$.sendEmailAjax.body={
+            'g-recaptcha-response':captcha,
+            'subject':subject,
+            'message':message,
+            'sender_email':this.email,
+            'receiver_emails':this.recipientEmails,
+            'firstname':firstname,
+            'lastname':lastname
+          };
+
+          this.$.sendEmailAjax.generateRequest();
+
+          this.setFeedback('sending');
+          document.getElementById("feedback-overlay").open();
+        }
+      },
+      setFeedback: function(state) {
+        switch(state) {
+          case "sending":
+              this.emailSending = true;
+              this.emailFailed = false;
+              this.emailSucceeded = false;
+              break;
+          case "succeeded":
+              this.emailSending = false;
+              this.emailFailed = false;
+              this.emailSucceeded = true;
+              break;
+          case "failed":
+              this.emailSending = false;
+              this.emailFailed = true;
+              this.emailSucceeded = false;
+              break;
+          }
+      },
+      resetForm: function() {
+        this.firstname = "";
+        this.lastname = "";
+        this.email = "";
+        this.signature = "";
+        this.$.constituency._setSelectedItem(null);
+        this.selectedReps = null;
+        this.emailSubject = this.emailSubjectOriginal;
+        this.emailMessage = this.emailMessageOriginal;
+      },
+      validateForm: function () {
+        var email = this.$.email.validate();
+        var firstname = this.$.firstname.validate();
+        var lastname = this.$.lastname.validate();
+        var subject = this.$.subject.validate();
+        var message = this.$.message.validate();
+        var con = this.validateDropdown();
+        var reps = this.validateRepsCheckboxes();
+        
+        return email && firstname && lastname && subject && subject && message && con && reps;
+      },
+      onInputChange: function(e) {
+        e.target.validate();
+
+        this.signature = "Sincerely, \n";
+        
+        if(this.firstname)
+          this.signature += this.firstname + " ";
+
+        if(this.lastname)
+          this.signature += this.lastname + " ";
+
+        if(this.email)
+          this.signature += " <" + this.email + ">";
+      },
+      getCaptcha: function() {
+        var recaptcha = grecaptcha.getResponse();
+        this.showCaptchaError = !recaptcha ? true : false;
+        return recaptcha;
+      },
+      validateDropdown: function () {
+        this.showConstituencySelectError = !this.$.constituency.validate();
+        return !this.showConstituencySelectError;
+      },
+      validateRepsCheckboxes: function () {
+        this.recipientEmails = [];
+        var reps = document.querySelectorAll('.reps');
+        if(reps){
+          var checked = false;
+          for(var i = 0; i < reps.length; i++){
+            if(reps[i].checked){
+              checked = true;
+              this.recipientEmails.push(reps[i].value); 
+            }
+          }
+          this.showRepSelectError = reps.length && !checked;
+        }
+        return !this.showRepSelectError;
+      },
+      onConstituencySelected: function (e) {
+        var selectedConstituency = e.target.selectedItem.value
+        
+        // we cannot push directly into this.selectedReps as to do so currently throws the error "Uncaught TypeError: Cannot read property '0' of undefined"
+        var tempSelectedReps = [];
+
+        for(var i=0; i < this.representatives.length; i++){
+          if(this.representatives[i].constituency === e.target.selectedItem.value){
+            tempSelectedReps.push(this.representatives[i]);   
+          }
+        }
+
+        this.selectedReps = tempSelectedReps;
+
+        // called to remove error messages in UI
+        this.validateDropdown();
+      },
+      handleGetEmailSubResponse: function(e, data) {
+        this.emailSubjectOriginal = this.emailSubject = data.response;
+      },
+      handleGetEmailMsgResponse: function(e, data) {
+        this.emailMessageOriginal = this.emailMessage = data.response;
+      },
+      handleGetRepsResponse: function (data) {
+        this.representatives = data.detail.response;
+        var tempConstituencies = [];
+
+        for(var i=0; i < this.representatives.length; i++){
+          var constituency = this.representatives[i].constituency;
+          if(tempConstituencies.indexOf(constituency) == -1){
+            tempConstituencies.push(constituency);   
+          }
+        }
+        
+        this.constituencies = tempConstituencies;
+      },
+      handleSendEmailResponse: function (data) {
+        if(data.detail.response.success){
+          this.resetForm();
+          this.setFeedback('succeeded');
+        } else{
+          this.setFeedback('failed');
+          this.logResponseErrors(data);
+        }
+
+        console.log(1);
+        grecaptcha.reset(); 
+        console.log(2); 
+      },
+      logResponseErrors: function (data) {
+        console.log("Send email overall success: " + data.detail.response.success);
+        console.log("capachaResponse.success: " + data.detail.response.capachaResponse.success);
+        console.log("capachaResponse['error-codes']: " + data.detail.response.capachaResponse["error-codes"]);
+          
+        if(data.detail.response.curlResponse.keys({}).length){
+          console.log("curlResponse.success (curl combined success): " + data.detail.response.curlResponse.success);
+          console.log("curlResponse.curlResponse.success: " + data.detail.response.curlResponse.curlResponse.success);
+          console.log("curlResponse.curlResponse['error-codes']: " + data.detail.response.curlResponse.curlResponse["error-codes"]);
+          console.log("curlResponse.appsScriptResponse.success: " + data.detail.response.curlResponse.curlResponse.success);
+          console.log("curlResponse.appsScriptResponse['error-codes']: " + data.detail.response.curlResponse.curlResponse["error-codes"]);
+        }
+      }
+    });
+</script>
+</dom-module>

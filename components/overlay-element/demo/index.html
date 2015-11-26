@@ -1,0 +1,29 @@
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    
+    <title>overlay-element Demo</title>
+    <meta name="description" content="A simple implimentation of iron-overlay-behavior with close button">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../overlay-element.html">
+  </head>
+  <body unresolved>
+
+    <button onclick="openOverlay()">Open</button>
+    <overlay-element >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tincidunt dui sit amet mi auctor, ac gravida magna aliquam. Fusce quis purus elementum, tempus nisi vel, volutpat nulla. Vestibulum mollis dictum tellus, vulputate porttitor arcu. Curabitur imperdiet risus id egestas accumsan. Donec lectus felis, dignissim id iaculis sit amet, faucibus in leo.
+    </overlay-element>
+
+    <script>
+      function openOverlay(e) {
+        document.getElementsByTagName("overlay-element")[0].open();
+      }
+    </script>
+
+  </body>
+</html>
+
+

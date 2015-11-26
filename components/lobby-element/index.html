@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>lobby-element Demo</title>
+    <meta name="description" content="lobby-element is a Polymer Web component containing a simple contact form allowing users to email their representatives.">
+
+    <script src="./webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="./lobby-element/lobby-element.html">
+    <style>
+      body{
+        margin:10px 30px;
+      }
+    </style>
+  </head>
+  <body unresolved>
+
+    <lobby-element enable-platforms="email, facebook, twitter" email-url="your_email_url" twitter-user="your_twitter_user"></lobby-element>
+
+  </body>
+</html>
+
+

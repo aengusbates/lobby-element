@@ -1,0 +1,36 @@
+{
+  "name": "social-element",
+  "version": "0.0.2",
+  "authors": [
+    "Aengus Bates <aengusbates@gmail.com>"
+  ],
+  "description": "A horizontal list of iconic social share links.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "social"
+  ],
+  "main": "social-element.html",
+  "license": "MIT",
+  "homepage": "https://github.com/aengusbates/social-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
+  },
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.2",
+    "commit": "435a4b4a6f202810755360487d04a2e46060faaf"
+  },
+  "_source": "git://github.com/aengusbates/social-element.git",
+  "_target": "~0.0.2",
+  "_originalSource": "aengusbates/social-element"
+}

@@ -1,0 +1,142 @@
+
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="social-element">
+  <template>
+    <style>
+      ul#share-buttons{
+        list-style: none;
+        padding: 0;
+      }
+      ul#share-buttons li{
+        display: inline;
+      }
+      ul#share-buttons img.svg{
+        width: 32px;
+      }
+    </style>
+
+    <ul id="share-buttons">
+      <template is="dom-if" if="{{facebook}}">
+        <li><a href="{{facebookHref}}" target="_blank" title="Share on Facebook"><img src="{{facebookImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{twitter}}">  
+        <li><a href="{{twitterHref}}" target="_blank" title="Tweet"><img src="{{twitterImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{googlePlus}}">  
+        <li><a href="{{googlePlusHref}}" target="_blank" title="Share on Google+"><img src="{{googlePlusImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{tumblr}}">  
+        <li><a href="{{tumblrHref}}" target="_blank" title="Post to Tumblr"><img src="{{tumblrImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{pinterest}}">  
+        <li><a href="{{pinterestHref}}" target="_blank" title="Pin it"><img src="{{pinterestImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{pocket}}">   
+        <li><a href="{{pocketHref}}" target="_blank" title="Add to Pocket"><img src="{{pocketImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{reddit}}">  
+        <li><a href="{{redditHref}}" target="_blank" title="Submit to Reddit"><img src="{{redditImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{linkedin}}">  
+        <li><a href="{{linkedinHref}}" target="_blank" title="Share on LinkedIn"><img src="{{linkedinImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{wordpress}}">  
+        <li><a href="{{wordpressHref}}" target="_blank" title="Publish on WordPress"><img src="{{wordpressImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{pinboard}}">  
+        <li><a href="{{pinboardHref}}" target="_blank" title="Save to Pinboard"><img src="{{pinboardImg}}"></a></li>
+      </template>
+      <template is="dom-if" if="{{email}}">  
+        <li><a href="{{emailHref}}" target="_blank" title="Email"><img src="{{emailImg}}"></a></li>
+      </template>
+    </ul>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'social-element',
+      properties: {
+        enablePlatforms: {type: String, value: ""},
+        twitterUser: {type: String, value: ""},
+        iconSet: {type: String, value: ""}
+      },
+      ready: function() {
+        // update render flags for links
+        var arr = this.enablePlatforms.split(', ');
+        for (var i = 0; i < arr.length; i++) {
+          this[arr[i]] = true;  
+        }
+
+        this.setHrefs();
+        this.setSrcs();
+      },
+      attached: function(){
+        this.setSvgWidth();
+      },
+      setSvgWidth: function(){
+        // set img widths if of type svg (must wait until attached)
+        var icons = this.iconSet.split(' ');
+        if(icons[0] === "flat_rounded_rects"){
+          var div = document.querySelector('#share-buttons');
+          var imgs = div.getElementsByTagName('img');
+
+          for (var i = 0; i < imgs.length; i++) {
+            imgs[i].className += imgs[i].className ? ' svg' : 'svg';
+          } 
+        } 
+      },
+      setHrefs: function() {
+        //var url = encodeURIComponent("http://google.com");
+        var url = encodeURIComponent(document.URL);
+        var title = encodeURIComponent(document.title);
+        var description = "";
+
+        var descriptionTag = document.querySelector("meta[name='description']");
+        if(descriptionTag){
+          description = encodeURIComponent(descriptionTag.getAttribute("content"));
+        }
+
+        this.facebookHref = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+        this.twitterHref = "https://twitter.com/intent/tweet?text=" + title + "&url=" + url + "&via=" + this.twitterUser;
+        this.emailHref = "mailto:?subject=" + title + "&body=" + description + "%20:%20" + url;
+        this.googlePlusHref = "https://plus.google.com/share?url=" + url;
+        this.linkedinHref = "http://www.linkedin.com/shareArticle?mini=true&url=" + url + "&title=" + title + "&summary=" + description + "&source" + url;
+        this.pinboardHref = "https://pinboard.in/popup_login/?url=" + url + "&title=" + title + "&description=" + description;
+        this.pinterestHref = "http://pinterest.com/pin/create/button/?url=" + url + "&description" + description;
+        this.pocketHref = "https://getpocket.com/save?url=" + url;
+        this.redditHref = "http://www.reddit.com/submit?url=" + url;
+        this.tumblrHref = "http://www.tumblr.com/share?v=3&u=" + url;
+        this.wordpressHref = "http://wordpress.com/press-this.php?u=" + url;
+      },
+      setSrcs: function() {
+        var fileType = "";
+        var root = "";
+
+        if(this.iconSet === ""){
+          fileType = ".png";
+          root = this.resolveUrl("./images/flat_web/color/");
+        } else{
+          var icons = this.iconSet.split(' ');
+          if(icons[0] === "flat_rounded_rects"){
+            fileType = ".svg"
+            root = this.resolveUrl("./images/flat_rounded_rects/");
+
+          } else{
+            fileType = ".png"
+            root = this.resolveUrl("./images/" + icons[0] + "/" + icons[1] + "/");;
+          }
+        }
+
+        var arr = this.enablePlatforms.split(', ');
+        for (var i = 0; i < arr.length; i++) {
+          var prop = arr[i] + "Img";
+          this[prop] = root + this.toTitleCase(arr[i]) + fileType;  
+        }
+      },
+      toTitleCase: function(str){
+        return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
+      }
+    });
+  </script>
+</dom-module>

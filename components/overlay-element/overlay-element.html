@@ -1,0 +1,48 @@
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
+<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+
+
+<dom-module id="overlay-element">
+
+  <style>
+    :host {
+      @apply(--paper-font-body1);
+      background: white;
+      padding: 24px;
+      box-shadow: @apply(--shadow-elevation-6dp);
+      @apply(--layout-vertical);
+      @apply(--layout-center);
+    }
+    .close{
+      @apply(--layout-horizontal);
+      @apply(--layout-end-justified);
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  </style>
+
+  <template>
+    <div class="close">
+      <iron-icon icon="icons:close" on-click="close"></iron-icon>
+    </div>
+    <content></content>
+  </template>
+
+
+<script>
+  Polymer({
+    is: 'overlay-element',
+    behaviors: [
+      Polymer.IronOverlayBehavior
+    ],
+    close: function (data) {
+      this.close();
+    }
+  });
+</script>
+</dom-module>
+
+

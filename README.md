@@ -23,7 +23,7 @@ This doc will describe how to integrate it into your Web page and how to configu
           </head>
           <body unresolved>
         
-            <lobby-element enable-platforms="email, facebook, twitter" email-url="your_email_url" twitter-user="your_twitter_user">
+            <lobby-element email-url="your_email_url" enable-platforms="email, facebook, twitter" twitter-user="your_twitter_user">
             </lobby-element>
         
           </body>

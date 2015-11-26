@@ -1,0 +1,5 @@
+[
+    {"constituency":"here", "name":"Peter Pan", "email":"foo@gmail.com"},
+    {"constituency":"there", "name":"Mary Poppins", "email":"bar@gmail.com"},
+    {"constituency":"there", "name":"King Kong", "email":"baz@gmail.com"}
+]

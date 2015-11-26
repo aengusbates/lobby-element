@@ -243,7 +243,7 @@ on-response="handleSendEmailResponse"
 
           </div>
           <div class="layout-horizontal-end">
-            <social-element enable-platforms="email, facebook, twitter" twitter-user="[[twitterUser]]"></social-element>
+            <social-element enable-platforms="[[enablePlatforms]]" twitter-user="[[twitterUser]]"></social-element>
           </div>
         </div>
       </div>
@@ -256,7 +256,8 @@ on-response="handleSendEmailResponse"
   Polymer({
     is: 'lobby-element',
     properties: {'email-url': String,
-    'twitter-user': String},
+    'twitter-user': String,
+    'enable-platforms': String},
     ready: function() {
         // defer trying rendering Recaptcha until dom ready 
         this.showRecaptcha = true;

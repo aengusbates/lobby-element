@@ -10,9 +10,9 @@ This doc will describe how to integrate it into your Web page and how to configu
 ###Frontend
   1. Include `webcomponents-lite.min.js` and `lobby-element.html` in the header.
   
-  2. Assign values for `email-url` and `twitter-user` values. 
+  2. Assign values for `email-url`, `enable-platforms` and `twitter-user` values. 
     - `email-url` specifies the location of the PHP script on your server. You can find this script in the repo at `lobby-element/serverScripts/sendEmail.php`.
-    - `twitter-user` is optional. The value is passed straight through to [`social-element`](https://github.com/aengusbates/social-element) which can be removed if not needed.
+    - `twitter-user` and `enable-platforms` are optional. The values are passed straight through to [`social-element`](https://github.com/aengusbates/social-element) which can be removed if not needed. Please see the `social-element` project for more on configuration.
 
     **Example**
     
@@ -23,7 +23,7 @@ This doc will describe how to integrate it into your Web page and how to configu
           </head>
           <body unresolved>
         
-            <lobby-element email-url="path_to_server_side_email_script" twitter-user="your_twitter_username">
+            <lobby-element enable-platforms="email, facebook, twitter" email-url="your_email_url" twitter-user="your_twitter_user">
             </lobby-element>
         
           </body>
